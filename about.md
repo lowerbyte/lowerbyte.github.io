@@ -4,12 +4,12 @@ title: About
 permalink: /about/
 ---
 
-Some information about you!
+I'm learning low-level stuff and this blog is my way to do it : )
 
 ### More Information
 
-A place to include any other types of information that you'd like to include about yourself.
+English is not my native language and I do not have very good knowledge of low-level stuff, but hey! Everyone starts somewhere!
 
 ### Contact me
 
-[email@domain.com](mailto:email@domain.com)
+[dzikotroche@gmail.com](mailto:dzikotroche@gmail.com)
