@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Why you compiler is a pretty good guy.
+title: Why your compiler is a pretty good guy.
 ---
 Note: I'm also learning. If you find any wrong or misleading information, please write to me.
 
