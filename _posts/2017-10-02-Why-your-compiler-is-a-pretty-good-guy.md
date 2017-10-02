@@ -17,8 +17,8 @@ Let's take a look at the example.
 
 {% gist 58bf7f292d64cca94d5b751fcbc9fb81 %}
 
-As you can see we've got here simple struct with two ints, short and char. As we know in is 4 bytes, so we already have 8 bytes, then 2 bytes of short and 1 byte from char, so lets do some simple math: 4 + 4 + 2 + 1 = 11 bytes. 
-Ok, 11 bytes, that's good. It's to fire up our sample program.
+As you can see we've got here simple struct with two ints, short and char. As we know int is 4 bytes, so we already have 8 bytes, then 2 bytes of short and 1 byte from char, so lets do some simple math: 4 + 4 + 2 + 1 = 11 bytes. 
+Ok, 11 bytes, that's good. It's time to fire up our sample program.
 
 ![Reslut of alignment.](/images/Result of alignment.png)
 
@@ -61,6 +61,6 @@ Of course these are only tests which should show you that operations without ali
 
 And it's end for today! Hope you enjoy it!
 
-
+[1]. https://gcc.gnu.org/onlinedocs/gcc-5.4.0/gcc/Type-Attributes.html#Type-Attributes
 
 
