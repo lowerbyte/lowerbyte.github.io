@@ -4,7 +4,7 @@ title: Why your compiler is a pretty good guy.
 ---
 _Note: I'm also learning. If you find any wrong or misleading information, please write to me._
 
-Hello there!`\n`
+Hello there!
 So it's my very first post here (and in my whole life). Please note that English is not m native language, so there might be some mistakes. If you have any concernes just write about it to me!
 
 Let's get it started!
