@@ -15,7 +15,30 @@ Every time you're making a struct or an union in C, compiler implicitly align da
 You may think "How is that possible? Can it be that smart?" and the answer is yes.
 Let's take a look at the example.
 
-{% gist 58bf7f292d64cca94d5b751fcbc9fb81 %}
+```c
+#include <stdio.h>
+#include <time.h>
+
+int main()
+{     
+  struct aligmentStruct{
+    int x;  
+    int y;w
+    short z;
+    char m;
+  };
+   
+  struct aligmentStruct str;
+  struct aligmentStruct *p = &str;  
+       
+  printf("Sizeof x: %i\nSizeof y: %i\nSizeof z: %i\nSizeof m: %i\n", 
+      sizeof(p->x), sizeof(p->y),sizeof(p->z), sizeof(p->m));
+  
+  printf("Sizeof struct str: %i\n", sizeof(str));
+
+  return 0;
+}
+```
 
 As you can see we've got here simple struct with two ints, short and char. As we know int is 4 bytes, so we already have 8 bytes, then 2 bytes of short and 1 byte from char, so lets do some simple math: 4 + 4 + 2 + 1 = 11 bytes. 
 Ok, 11 bytes, that's good. It's time to fire up our sample program.
@@ -64,8 +87,4 @@ And it's end for today! Hope you enjoy it!
 ----
 ****
 [1]. https://gcc.gnu.org/onlinedocs/gcc-5.4.0/gcc/Type-Attributes.html#Type-Attributes
-
-```c
-int a = 5;
-```
 
