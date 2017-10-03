@@ -4,7 +4,7 @@ title: Why your compiler is a pretty good guy.
 ---
 _Note: I'm also learning. If you find any wrong or misleading information, please write to me._
 
-Hello there!
+Hello there!`\n`
 So it's my very first post here (and in my whole life). Please note that English is not m native language, so there might be some mistakes. If you have any concernes just write about it to me!
 
 Let's get it started!
@@ -23,7 +23,7 @@ int main()
 {     
   struct aligmentStruct{
     int x;  
-    int y;w
+    int y;
     short z;
     char m;
   };
@@ -61,7 +61,30 @@ In the description we can read:
 
 It sounds exaclty what we are looking for. Let's modify the example code:
 
-{% gist 62050b0e7318c0a158b4039b01a07151 %}
+```c
+#include <stdio.h>
+#include <time.h>
+
+int main()
+{     
+  struct __attribute__ ((__packed__)) aligmentStruct{
+    int x;  
+    int y;
+    short z;
+    char m;
+  };
+   
+  struct aligmentStruct str;
+  struct aligmentStruct *p = &str;  
+       
+  printf("Sizeof x: %i\nSizeof y: %i\nSizeof z: %i\nSizeof m: %i\n", 
+      sizeof(p->x), sizeof(p->y),sizeof(p->z), sizeof(p->m));
+  
+  printf("Sizeof struct str: %i\n", sizeof(str));
+
+  return 0;
+}
+```
 
 And the result:
 
@@ -71,7 +94,49 @@ Now we've got 11 bytes! It works! But how does it affect performance?
 As we are very curious there is no other way than check it by ourselves!
 We will use time.h and again modify example code. We will perform two tests. One for default compiler alignment and one for packed alignment.
 
-{% gist bc20af09e55d5dc729b12154e90f9852 %}
+```c
+#include <stdio.h>
+#include <time.h>
+
+int main()
+{     
+  /*struct __attribute__ ((__packed__)) aligmentStruct{
+    int x;  
+    int y;
+    short z;
+    char m;
+  };*/
+  
+  struct aligmentStruct{
+    int x;  
+    int y;
+    short z;
+    char m;
+  };
+
+  struct aligmentStruct str;
+  struct aligmentStruct *p = &str;  
+       
+  printf("Sizeof x: %i\nSizeof y: %i\nSizeof z: %i\nSizeof m: %i\n", 
+      sizeof(p->x), sizeof(p->y),sizeof(p->z), sizeof(p->m));
+  
+  printf("Sizeof struct str: %i\n", sizeof(str));
+
+  clock_t begin = clock();
+  for(int i = 0; i < 50000; i++)
+  {
+    p->x += 1;
+    p->y += 1;
+  }
+  clock_t end = clock();
+
+  double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+
+  printf("Time spent: %f s\n", time_spent);
+
+  return 0;
+}
+```
 
 Lets take a look at the results. I have perfomed couple of tests for each of alignment just to take average time, which for deafault alignment was 0,415 ms.
 
@@ -84,6 +149,7 @@ For the packed alignment on the other hand average time of execution was 0,448 m
 Of course these are only tests which should show you that operations without alignment are a little bit slower, but these diffrencies may be omitted in our results. In cases where we've got much, much bigger structs and performing very complex operations and we need it to be as fast as possible, the compiler will do everything to asure that.
 
 And it's end for today! Hope you enjoy it!
+
 ----
 ****
 [1]. https://gcc.gnu.org/onlinedocs/gcc-5.4.0/gcc/Type-Attributes.html#Type-Attributes
