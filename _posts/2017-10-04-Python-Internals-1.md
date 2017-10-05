@@ -83,12 +83,12 @@ Now we have 100% sure, that documentation is true. We have `ob_refcnt` which is 
 
 _Ok, ok, you tell me about all this things but what this have in common with this `C Structure Subtyping`?_
 
-Remember the text I told you not to worry about? C language is not objected oriented programming language but it has all of the tools, which can help us to simulate the objectivity! 
+Remember the text I told you not to worry about? C language is not objected oriented programming language but it has all of the tools, which can help us to simulate the objectivity!  
 I know, it may sound really scary at the moment, but just take a look how it works in Python:
 
 ![Inheritance in Python.](/images/post3_1.png)
 
-The fact that all of the objects starts with the same structure (PyObject_HEAD) give us opportunity to appeal to any of other Pythons objects using pointer of type `PyObject*`!
+The fact that all of the objects starts with the same structure (PyObject_HEAD) give us opportunity to appeal to any of other Pythons objects using pointer of type `PyObject*`!  
 Data below this structure is not important untill we want to get there and to do it we just have to cast the type to our real type (`PyIntObject*` or `PyListObject*` in the example).
 
 _Oookeyyy..._
@@ -134,8 +134,8 @@ int main(){
     return 0;
 }
 ```
-It is similar to what Python does. Our function `write` return the pointer to our parent structure `basic` but in the body of function we declare object with structure `child`.
-As you can see the first two variables `int a; char b;` are the same for both structures.
+It is similar to what Python does. Our function `write` return the pointer to our parent structure `basic` but in the body of function we declare object with structure `child`.  
+As you can see the first two variables `int a; char b;` are the same for both structures.  
 And this lets us to appeal to variable `c` of the `child` structure that we have assign in the `write` function, just by casting its pointer to `struct child*`! 
 
 _Yea, sure, you can talk and talk, but does it work?_
@@ -144,7 +144,7 @@ So let me show you then:
 
 ![Results of executing sample program.](/images/post3_2.png)
 
-Sizes of variables of `child` struct matches, addresses of particular variables matches with their sizes and whats more the values matches!
+Sizes of variables of `child` struct matches, addresses of particular variables matches with their sizes and whats more the values matches!  
 How does it look in memory? Like that:
 
 ![Shot of memory.](/images/post3_3.png)
@@ -176,7 +176,7 @@ Execution:
 
 ![Execution of program with wrong structures.](/images/post3_4.png)
 
-Now our `ptr->b` variable is not correct.
+Now our `ptr->b` variable is not correct.  
 Quick look in the memory dump and now everything seems to be clear:
 
 ![Shot of memory #2.](/images/post3_3.png)
@@ -184,7 +184,7 @@ Quick look in the memory dump and now everything seems to be clear:
 _Ummm, did he paste the same picture twice...?_
 
 I afraid not, so what happend? The problem lies in `basic` structure variables size.
-Now we have got 2 int, so 8 bytes, but we writing into memory using `child` structure so int, char, short. When we are reading from the memory using `ptr->b` we are using `basic` structure, because the function return pointer to it, so we are reading 4 bytes instead of one, like in `child`.
+Now we have got 2 int, so 8 bytes, but we writing into memory using `child` structure so int, char, short. When we are reading from the memory using `ptr->b` we are using `basic` structure, because the function return pointer to it, so we are reading 4 bytes instead of one, like in `child`.  
 If we now get 4 bytes from the memory snapshot:
 
 `
@@ -196,8 +196,8 @@ ptr->b: 0x00030002
 ptr->c: 0x00000003
 `
 
-And guess what! Value 0x00030002 is our 196610 in decimal!
-Ok, that's it for today!
+And guess what! Value 0x00030002 is our 196610 in decimal!  
+Ok, that's it for today!  
 Hope you enjoy it!
 
 ----
