@@ -28,14 +28,14 @@ pointer to the object is copied or deleted; when the reference count
 reaches zero there are no references to the object left and it can be
 removed from the heap.
 
-An object has a 'type' that determines what it represents and what kind
+>An object has a 'type' that determines what it represents and what kind
 of data it contains.  An object's type is fixed when it is created.
 Types themselves are represented as objects; an object contains a
 pointer to the corresponding type object.  The type itself has a type
 pointer pointing to the object representing the type 'type', which
 contains a pointer to itself!).
 
-Objects do not float around in memory; once allocated an object keeps
+>Objects do not float around in memory; once allocated an object keeps
 the same size and address.  Objects that must hold variable-size data
 can contain pointers to variable-size parts of the object.  Not all
 objects of the same type have the same size; but the size cannot change
@@ -44,7 +44,7 @@ object can be simply a pointer -- moving an object would require
 updating all the pointers, and changing an object's size would require
 moving it if there was another object right next to it.)
 
-Objects are always accessed through pointers of the type 'PyObject *'.
+>Objects are always accessed through pointers of the type 'PyObject *'.
 The type 'PyObject' is a structure that only contains the reference count
 and the type pointer.  The actual memory allocated for an object
 contains other data that can only be accessed after casting the pointer
@@ -90,15 +90,15 @@ I know, it may sound really scary at the moment, but just take a look how it wor
 PyObject*----------     PyIntObject*
 |type___|     \    \...>|type___|
 |ref_cnt|      \        |ref_cnt|
-`````````       \       |val____|
-                 \      `````````
+~~~~~~~~~       \       |val____|
+                 \      ~~~~~~~~~
                   \
                    \    PyListObject*
                     \..>|type___|
                         |ref_cnt|
                         |**items|
                         |size___|
-                        `````````
+                        ~~~~~~~~~
 `
 
 The fact that all of the objects starts with the same structure (PyObject_HEAD) give us opportunity to appeal to any of other Pythons objects using pointer of type `PyObject*`!
