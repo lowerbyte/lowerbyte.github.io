@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Python Internals #1.
+title: Python Internals - part 1.
 ---
 
 As Python recently became number 1 of most popular programming languages[1], it's time to check whats under the hood!
@@ -86,20 +86,7 @@ _Ok, ok, you tell me about all this things but what this have in common with thi
 Remember the text I told you not to worry about? C language is not objected oriented programming language but it has all of the tools, which can help us to simulate the objectivity! 
 I know, it may sound really scary at the moment, but just take a look how it works in Python:
 
-`
-PyObject*----------     PyIntObject*
-|type___|     \    \...>|type___|
-|ref_cnt|      \        |ref_cnt|
-~~~~~~~~~       \       |val____|
-                 \      ~~~~~~~~~
-                  \
-                   \    PyListObject*
-                    \..>|type___|
-                        |ref_cnt|
-                        |**items|
-                        |size___|
-                        ~~~~~~~~~
-`
+![Inheritance in Python.](/images/post3_1.png)
 
 The fact that all of the objects starts with the same structure (PyObject_HEAD) give us opportunity to appeal to any of other Pythons objects using pointer of type `PyObject*`!
 Data below this structure is not important untill we want to get there and to do it we just have to cast the type to our real type (`PyIntObject*` or `PyListObject*` in the example).
@@ -199,6 +186,7 @@ _Ummm, did he paste the same picture twice...?_
 I afraid not, so what happend? The problem lies in `basic` structure variables size.
 Now we have got 2 int, so 8 bytes, but we writing into memory using `child` structure so int, char, short. When we are reading from the memory using `ptr->b` we are using `basic` structure, because the function return pointer to it, so we are reading 4 bytes instead of one, like in `child`.
 If we now get 4 bytes from the memory snapshot:
+
 `
 -offset-- | 0  1  2  3  4  5  6  7  8  9 ....
 0x00601048| 01 00 00 00 02 00 03 00 00 00....
