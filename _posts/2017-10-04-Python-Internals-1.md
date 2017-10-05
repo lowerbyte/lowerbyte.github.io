@@ -17,11 +17,11 @@ I really thought a lot, with what I can start this series (which I suppose will 
 
 ### C Structure Subtyping
 
-As you know, Python is writen in the oldest of the greatest programming languages - **C**.
-_So how it is possible that one of the best objected oriented programming in the world is written in language which has so much in common with objectivity as tree has with an human eye?_
-It was possible due to very old trick of C language programmers.
-But first things first.
-If you open the sources of the language and go to /Include/ and open object.h you will see a beautiful description of something on which Python stands - definition of PyObject.
+As you know, Python is writen in the oldest of the greatest programming languages - **C**.  
+_So how it is possible that one of the best objected oriented programming in the world is written in language which has so much in common with objectivity as tree has with an human eye?_  
+It was possible due to very old trick of C language programmers.  
+But first things first.  
+If you open the sources of the language and go to /Include/ and open object.h you will see a beautiful description of something on which Python stands - definition of PyObject.  
 Let me paste a part of it here:
 >An object has a 'reference count' that is increased or decreased when a
 pointer to the object is copied or deleted; when the reference count
