@@ -187,14 +187,14 @@ I afraid not, so what happend? The problem lies in `basic` structure variables s
 Now we have got 2 int, so 8 bytes, but we writing into memory using `child` structure so int, char, short. When we are reading from the memory using `ptr->b` we are using `basic` structure, because the function return pointer to it, so we are reading 4 bytes instead of one, like in `child`.  
 If we now get 4 bytes from the memory snapshot:
 
-`
--offset-- | 0  1  2  3  4  5  6  7  8  9 ....
-0x00601048| 01 00 00 00 02 00 03 00 00 00....
 
-ptr->a: 0x00000001
-ptr->b: 0x00030002
-ptr->c: 0x00000003
-`
+`-offset-- | 0  1  2  3  4  5  6  7  8  9 ....`  
+`0x00601048| 01 00 00 00 02 00 03 00 00 00....`  
+
+`ptr->a: 0x00000001`  
+`ptr->b: 0x00030002`  
+`ptr->c: 0x00000003`  
+
 
 And guess what! Value 0x00030002 is our 196610 in decimal!  
 Ok, that's it for today!  
