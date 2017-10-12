@@ -253,5 +253,5 @@ And that's it, see you next time!
 
 ----
 ****
-[1]. http://www.nasm.us/xdoc/2.11.08/html/nasmdoc4.html#section-4.3
+[1]. http://www.nasm.us/xdoc/2.11.08/html/nasmdoc4.html#section-4.3  
 [2]. http://www.nasm.us/xdoc/2.11.08/html/nasmdoc3.html#section-3.2
