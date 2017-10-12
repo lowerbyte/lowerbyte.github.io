@@ -5,7 +5,7 @@ title: Your own Virtual Machine.
 
 Todays post will guide you trough the one of the most basic stuff. How does your system works?
 
- _Note: I'm also learning. If you find any wrong or misleading information, please write to me._
+ _Note: I'm also learning. If you find any wrong or misleading information, please write to me._  
  _Note: All the code you may find at my github in Blog repository_
 
 I always wanted to understand how this all works. How it is happening that I can tell to my system what it have to do and how it do it. So I thought that the best learning method is to do something and that is how this Virtual Machine was created.
