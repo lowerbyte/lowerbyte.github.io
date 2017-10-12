@@ -5,7 +5,7 @@ title: Your own Virtual Machine.
 
 Todays post will guide you trough the one of the most basic stuff. How does your system works?
 
- _Note: I'm also learning. If you find any wrong or misleading information, please write to me._
+ _Note: I'm also learning. If you find any wrong or misleading information, please write to me._  
  _Note: All the code you may find at my github in Blog repository_
 
 I always wanted to understand how this all works. How it is happening that I can tell to my system what it have to do and how it do it. So I thought that the best learning method is to do something and that is how this Virtual Machine was created.
@@ -242,12 +242,13 @@ data:
   db "Hello World", 0xa, 0
 ```
 
+Now you have to compile it as it was done earlier and after that we can finally check everything.
 Lets run our Virtual Machine with `python virtualmachine.py <<file name>>` to see if it actually works:
 
 ![It's alive!](/images/post4_2.png)
 
 Yes it is! Now I can write some real programs for it!  
-Ofcourse it doesn't have any interruption system implemented nor IO modules, but it just example. If you want to add more stuff to it -  feel free : )
+Ofcourse it doesn't have any interruption system implemented nor IO modules, but its just example. If you want to add more stuff to it -  feel free : )
 
 And that's it, see you next time!
 
