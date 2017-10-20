@@ -11,18 +11,7 @@ _Note: All the code you may find at my github in Blog repository_
 I'm sure you know whenever you download a new meme with cat, your browser is sending a packet with request and receive another packet or packets in response.  
 This packet usually looks like this:
 
-`+----------------------------------------------------+`
-`| Ethernet frame                                     |`  
-`|                                                    |`  
-`|       +------------------------------------------+ |`  
-`|       |  IP frame                                | |`  
-`|       |                                          | |`  
-`|       |      +--------------------------------+  | |`  
-`|       |      |   TCP/UDP frame                |  | |`  
-`|       |      |                                |  | |`  
-`|       |      +--------------------------------+  | |`  
-`|       +------------------------------------------+ |`  
-`+----------------------------------------------------|`  
+![Packet struct.](/images/post5_3.png)
 
 You never notice them but they are the reason you can do whatever you want in the Internet. I will not talk about Ethernet frame, which mainly is used to find devices in the local network with MAC address (and also specify the IP version) and focus on the IP frame and TCP/UDP frame.
 
@@ -35,21 +24,23 @@ I'm glad you asked! I will shortly describe it to you.
 
 So it is an universal transmission mechanism, which has its special place in the protocol hierachy[1]:
 
-`     		  +------+ +-----+ +-----+     +-----+`  
-`                 |Telnet| | FTP | | TFTP| ... | ... |`  
-`                 +------+ +-----+ +-----+     +-----+`  
-`                       |   |         |           |`  
-`                      +-----+     +-----+     +-----+`  
-`                      | TCP |     | UDP | ... | ... |`  
-`                      +-----+     +-----+     +-----+`  
-`                         |           |           |`  
-`                      +--------------------------+----+`  
-`                      |    Internet Protocol & ICMP   |`  
-`                      +--------------------------+----+`  
-`                                     |`  
-`                        +---------------------------+`  
-`                        |   Local Network Protocol  |`  
-`                        +---------------------------+`  
+```
+    		 +------+ +-----+ +-----+     +-----+
+                 |Telnet| | FTP | | TFTP| ... | ... |  
+                 +------+ +-----+ +-----+     +-----+  
+                       |   |         |           |  
+                      +-----+     +-----+     +-----+  
+                      | TCP |     | UDP | ... | ... |  
+                      +-----+     +-----+     +-----+  
+                         |           |           |  
+                      +--------------------------+----+  
+                      |    Internet Protocol & ICMP   |  
+                      +--------------------------+----+  
+                                     |  
+                        +---------------------------+  
+                        |   Local Network Protocol  |  
+                        +---------------------------+  
+```
 
 And how it looks from inside? Here's IP header structure:
 
@@ -222,7 +213,7 @@ Now we have everything! Lets test it!
 
 And yes it worked! Now you know how to write simple parser for IP packets! You can discover a whole new world!
 
-_Why did he blur some data?_
+_Why did he blur some data?_  
 Ooo I'm glad you ask, but it is a story for another post!
 
 And that's it! Hope you enjoyed it!
