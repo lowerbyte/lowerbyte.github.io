@@ -11,7 +11,20 @@ _Note: All the code you may find at my github in Blog repository_
 I'm sure you know whenever you download a new meme with cat, your browser is sending a packet with request and receive another packet or packets in response.  
 This packet usually looks like this:
 
-![Packet struct.](/images/post5_3.png)
+```
++----------------------------------------------------+
+| Ethernet frame                                     |  
+|                                                    |  
+|       +------------------------------------------+ |  
+|       |  IP frame                                | |  
+|       |                                          | |  
+|       |      +--------------------------------+  | |  
+|       |      |   TCP/UDP frame                |  | |  
+|       |      |                                |  | |  
+|       |      +--------------------------------+  | |  
+|       +------------------------------------------+ |  
++----------------------------------------------------+ 
+```
 
 You never notice them but they are the reason you can do whatever you want in the Internet. I will not talk about Ethernet frame, which mainly is used to find devices in the local network with MAC address (and also specify the IP version) and focus on the IP frame and TCP/UDP frame.
 
@@ -44,21 +57,23 @@ So it is an universal transmission mechanism, which has its special place in the
 
 And how it looks from inside? Here's IP header structure:
 
-`    0                   1                   2                   3`  
-`    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1`  
-`   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+`  
-`   |Version|  IHL  |Type of Service|          Total Length         |`  
-`   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+`  
-`   |         Identification        |Flags|      Fragment Offset    |`  
-`   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+`  
-`   |  Time to Live |    Protocol   |         Header Checksum       |`  
-`   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+`  
-`   |                       Source Address                          |`  
-`   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+`  
-`   |                    Destination Address                        |`  
-`   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+`  
-`   |                    Options                    |    Padding    |`  
-`   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+`  
+```
+    0                   1                   2                   3  
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1  
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  
+   |Version|  IHL  |Type of Service|          Total Length         |  
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  
+   |         Identification        |Flags|      Fragment Offset    |  
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  
+   |  Time to Live |    Protocol   |         Header Checksum       |  
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  
+   |                       Source Address                          |  
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  
+   |                    Destination Address                        |  
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  
+   |                    Options                    |    Padding    |  
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  
+```
 
 You can read what each of these fields means in [1]. For our program we need only byte-size of each field.
 I will describe one very important field `Protocol`.  
@@ -67,16 +82,18 @@ I will describe one very important field `Protocol`.
 
 And to be more specific in RFC-790[2], where we can see following table (here just part of it):
 
-`      Decimal    Octal      Protocol Numbers                  References`  
-`      -------    -----      ----------------                  ----------`  
-`           0       0         Reserved                              [JBP]`  
-`           1       1         ICMP                               [53,JBP]`  
-`           2       2         Unassigned                            [JBP]`  
-`           3       3         Gateway-to-Gateway              [48,49,VMS]`  
-`           4       4         CMCC Gateway Monitoring Message [18,19,DFP]`  
-`           5       5         ST                                 [20,JWF]`  
-`           6       6         TCP                                [34,JBP]`  
-`           7       7         UCL                                    [PK]`  
+```
+      Decimal    Octal      Protocol Numbers                  References  
+      -------    -----      ----------------                  ----------  
+           0       0         Reserved                              [JBP]  
+           1       1         ICMP                               [53,JBP]  
+           2       2         Unassigned                            [JBP]  
+           3       3         Gateway-to-Gateway              [48,49,VMS]  
+           4       4         CMCC Gateway Monitoring Message [18,19,DFP]  
+           5       5         ST                                 [20,JWF]  
+           6       6         TCP                                [34,JBP]  
+           7       7         UCL                                    [PK]  
+```
 
 So if field `Protocol` in `IP header` has value 6 it means the next layer is `TCP` - **Transmission Control Protocol** (as in the first listing).  
 And it's proparbly the most common case (with `UDP` - **User Datagram Protocol**). At this point you may think _why is it the most common case?_ and here's the answer (to be more specific in RFC-739[3])!
@@ -91,25 +108,27 @@ Unfortunately yes, but we will talk about this in another post.
 
 We already know some basic stuff about `TCP`, so it is time to learn how it is built.
 
-`    0                   1                   2                   3`  
-`    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1`  
-`   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+`  
-`   |          Source Port          |       Destination Port        |`  
-`   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+`  
-`   |                        Sequence Number                        |`  
-`   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+`  
-`   |                    Acknowledgment Number                      |`  
-`   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+`  
-`   |  Data |           |U|A|P|R|S|F|                               |`  
-`   | Offset| Reserved  |R|C|S|S|Y|I|            Window             |`  
-`   |       |           |G|K|H|T|N|N|                               |`  
-`   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+`  
-`   |           Checksum            |         Urgent Pointer        |`  
-`   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+`  
-`   |                    Options                    |    Padding    |`  
-`   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+`  
-`   |                             data                              |`  
-`   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+`  
+```
+    0                   1                   2                   3  
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1  
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  
+   |          Source Port          |       Destination Port        |  
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  
+   |                        Sequence Number                        |  
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  
+   |                    Acknowledgment Number                      |  
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  
+   |  Data |           |U|A|P|R|S|F|                               |  
+   | Offset| Reserved  |R|C|S|S|Y|I|            Window             |  
+   |       |           |G|K|H|T|N|N|                               |  
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  
+   |           Checksum            |         Urgent Pointer        |  
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  
+   |                    Options                    |    Padding    |  
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  
+   |                             data                              |  
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  
+```
 
 And again if you want to know what every field means, please refer to [3] (which I highly recommend!).
 
