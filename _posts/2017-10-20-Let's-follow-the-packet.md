@@ -152,6 +152,7 @@ Then you can go to `socket(2)` for more information and so on. Manuals are the g
 
 So when we have our socket we can parse the headers. As we listen only for `INET` packets we will parse `IP header` and `TCP header`. If you want to listen for whole packets instead of `AF_INET` use `AF_PACKET`, as you can read in `man 2 socket`:
 >AF_PACKET           Low level packet interface       packet(7)
+
 Rembember that I'm using only `IP` packets because I want to show you how you can start with parsing packtes.
 
 
@@ -226,7 +227,7 @@ Acknowledgment: %s\nFlags:\nURG: %s, ACK: %s, PSH: %s, RST: %s, SYN: %s, FIN:%s\
         print('------------------------------------------------------------')
 ```
 
-Now we have everything! Lets test it!
+Now we have everything! Let's test it!
 
 ![Test, test, test!](/images/post5_2.png)
 
