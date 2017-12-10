@@ -23,7 +23,7 @@ The results I got were very promissing (for 100, 300, 700 and 1000 generations, 
 I only thought that drawning with triangles looks much more badass[2] so I tried to do it this way. If you don't know how to render the triangle, don't worry and read [this](http://www.sunshine2k.de/coding/java/TriangleRasterization/TriangleRasterization.html).  
 And I must say I was 100% right! It looks awesome and that's why this version of script is uploaded to my github. Just look at it!
 
-![100 generations](/images/genetic_algorithm/100pokolen_traingle.png)![300 generations](/images/genetic_algorithm/300pokolen_triangle.png)![700 generations](/images/genetic_algorithm/700pokolen_triangle.png)![1000 generations](/images/genetic_algorithm/1000pokolen_triangle.png)
+![100 generations](/images/genetic_algorithm/100pokolen_triangle.png)![300 generations](/images/genetic_algorithm/300pokolen_triangle.png)![700 generations](/images/genetic_algorithm/700pokolen_triangle.png)![1000 generations](/images/genetic_algorithm/1000pokolen_triangle.png)
 
 And I could end my story here, but there was one thing which bothered me the most. It was soooo slow! And I mean it. Possibly the slowest program I have ever written.
 I made some test and generating 10 generations take around **137.5 seconds**!  
