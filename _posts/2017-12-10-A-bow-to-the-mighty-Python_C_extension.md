@@ -53,7 +53,7 @@ def score():
         bests[i] = fitness[i].idx
 ```
 
-And I must say I'm not surprised, lots of things is happening there.  
+And I must say I'm not surprised, lots of things are happening there.  
 If this is the weak point I thought it is the best candidate to replace it with the C extension.  
 _Please keep in mind this is not production code_  
 I wrote the `score` **module** (score.c at my github), which implements three functions:
