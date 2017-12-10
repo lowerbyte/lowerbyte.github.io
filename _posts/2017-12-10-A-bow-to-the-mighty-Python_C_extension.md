@@ -58,7 +58,7 @@ If this is the weak point I thought it is the best candidate to replace it with 
 _Please keep in mind this is not production code_  
 I wrote the `score` **module** (score.c at my github), which implements three functions:
 
-```python
+```c
 static PyObject* scoreFunc_score(PyObject* self, PyObject* args){
     PyObject* specimensList; 
     PyObject* allSpec;
