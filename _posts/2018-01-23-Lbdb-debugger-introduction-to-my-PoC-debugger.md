@@ -119,11 +119,11 @@ As you can see using different `enum __ptrace_request request` which is the firs
 Full list of request _(as always)_ you may find in manual page. I will paste the most useful _(I think)_:
 
 >PTRACE_PEEKTEXT, PTRACE_PEEKDATA  
-Read a word at the address addr in the tracee's memory,  returning the word as the result of the ptrace() call.  Linux does not have separate  text  and  data  address  spaces,  so  these  two requests  are  currently  equivalent.  (data is ignored; but see NOTES.)
+Read a word at the address addr in the tracee's memory,  returning the word as the result of the ptrace() call.  Linux does not have separate  text  and  data  address  spaces,  so  these  two requests  are  currently  equivalent.  (data is ignored; but see NOTES.)  
 >PTRACE_POKETEXT, PTRACE_POKEDATA  
-Copy  the  word data to the address addr in the tracee's memory. As for PTRACE_PEEKTEXT and PTRACE_PEEKDATA, these  two  requests are currently equivalent.
+Copy  the  word data to the address addr in the tracee's memory. As for PTRACE_PEEKTEXT and PTRACE_PEEKDATA, these  two  requests are currently equivalent.  
 >PTRACE_GETREGS, PTRACE_GETFPREGS  
-Copy the tracee's general-purpose or  floating-point  registers, respectively,   to   the   address  data  in  the  tracer.   See <sys/user.h> for information on the format of this data.   (addr is  ignored.)   Note that SPARC systems have the meaning of data and addr reversed; that is, data is ignored  and  the  registers are copied to the address addr.  PTRACE_GETREGS and PTRACE_GETFPREGS are not present on all architectures.
+Copy the tracee's general-purpose or  floating-point  registers, respectively,   to   the   address  data  in  the  tracer.   See <sys/user.h> for information on the format of this data.   (addr is  ignored.)   Note that SPARC systems have the meaning of data and addr reversed; that is, data is ignored  and  the  registers are copied to the address addr.  PTRACE_GETREGS and PTRACE_GETFPREGS are not present on all architectures.  
 > PTRACE_SETREGS, PTRACE_SETFPREGS  
 Modify the tracee's general-purpose or floating-point registers, respectively,  from  the  address  data  in  the tracer. As for PTRACE_POKEUSER, some general-purpose register modifications may be disallowed.  (addr is ignored.)  Note that SPARC systems have the meaning of data and addr reversed; that is, data is  ignored and   the   registers   are   copied   from  the  address  addr. PTRACE_SETREGS and  PTRACE_SETFPREGS  are  not  present  on  all architectures.
 
