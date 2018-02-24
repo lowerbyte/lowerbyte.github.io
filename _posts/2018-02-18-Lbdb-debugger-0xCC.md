@@ -77,15 +77,15 @@ mov	edi, 0x400526
 call	0xdeadbeef
 ```
 
-It's hexdump will look like this:
+It's hexdump will look like this:  
 `-offset-  0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F`  
 `0x000000  55 48 89 e5 bf 26 05 40 00 e8 e1 be ad de`  
 
-If we would set the breakpoint at `0x0` it would look like this (`push` opcode is `50+rd` which is destination register and has 5 bits):
+If we would set the breakpoint at `0x0` it would look like this (`push` opcode is `50+rd` which is destination register and has 5 bits):  
 `-offset-  0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F`  
 `0x000000  cc 48 89 e5 bf 26 05 40 00 e8 e1 be ad de`  
 
-And finally, when breakpoint would have more than one byte, for example 12 bits opcode we would overwrite the next byte:
+And finally, when breakpoint would have more than one byte, for example 12 bits opcode we would overwrite the next byte:  
 `-offset-  0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F`  
 `0x000000  cc c8 89 e5 bf 26 05 40 00 e8 e1 be ad de`  
 
