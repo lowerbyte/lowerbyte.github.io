@@ -135,7 +135,7 @@ Bins
 ```
 
 There are 4 types of bins:
-1. Fastbins - memory chunks up to 80 bytes, arranged in LIFO order, freed in `malloc_consolidate`.
+- Fastbins - memory chunks up to 80 bytes, arranged in LIFO order, freed in `malloc_consolidate`.
   ```
     malloc manages fastbins very conservatively yet still
     efficiently, so fragmentation is rarely a problem for values less
@@ -160,7 +160,7 @@ There are 4 types of bins:
     other free chunks.
   ```
 
-2. Unsorted bin - when chunk of any size (small or large) gets freed it firstly is placed in unsorted bin, when malloc gives it another one chance to be used (FIFO order).
+- Unsorted bin - when chunk of any size (small or large) gets freed it firstly is placed in unsorted bin, when malloc gives it another one chance to be used (FIFO order).
     ```
     All remainders from chunk splits, as well as all returned chunks,
     are first placed in the "unsorted" bin. They are then placed
@@ -170,7 +170,7 @@ There are 4 types of bins:
     and taken off (to be either used or placed in bins) in malloc.
     ```
 
-3. Small bins - following code presents a way to count maximum small chunk size - after doing some math you will get 512 bytes (for 32-bit system and 1024 for 64-bit) (FIFO order). Chunks inside bins are the same size.
+- Small bins - following code presents a way to count maximum small chunk size - after doing some math you will get 512 bytes (for 32-bit system and 1024 for 64-bit) (FIFO order). Chunks inside bins are the same size.
     ```c
     #define in_smallbin_range(sz)  \
         ((unsigned long) (sz) < (unsigned long) MIN_LARGE_SIZE)
@@ -195,7 +195,7 @@ There are 4 types of bins:
     - INTERNAL_SIZE_T might be signed or unsigned, might be 32 or 64 bits
     ```
 
-4. Large bins - chunks of size more than 512 bytes (FIFO order).
+- Large bins - chunks of size more than 512 bytes (FIFO order).
 
 You have come this far? Nice! Now we will talk about implemetation of `malloc` and `free`.  
 So what happens when you call `malloc`?   
