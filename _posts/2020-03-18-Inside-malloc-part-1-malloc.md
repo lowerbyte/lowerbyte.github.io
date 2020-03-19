@@ -44,42 +44,42 @@ _Okey, it will let us to override the second buffer and maybe segfault, but how 
 And here we will go deep into malloc (prepare yourself for lots of theory)! Firstly let's focus on what malloc allocates. Defienietly some data structure and in this case it's called _memory chunk_. There are two types of memory chunks - an allocated chunk and free chunk:  
 An allocated chunk looks like this[3]:
 ```
-    chunk->+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-	       |             Size of previous chunk, if unallocated (P clear)  |
-	       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-	       |             Size of chunk, in bytes                     |A|M|P|
-      mem->+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-	       |             User data starts here...                          .
-	       .                                                               .
-	       .             (malloc_usable_size() bytes)                      .
-	       .                                                               |
-nextchunk->+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-	       |             (size of chunk, but used for application data)    |
-	       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-	       |             Size of next chunk, in bytes                |A|0|1|
-	       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ <--- chunk
+|             Size of previous chunk, if unallocated (P clear)  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|             Size of chunk, in bytes                     |A|M|P|
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ <--- mem
+|             User data starts here...                          .
+.                                                               .
+.             (malloc_usable_size() bytes)                      .
+.                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ <--- nexchunk
+|             (size of chunk, but used for application data)    |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|             Size of next chunk, in bytes                |A|0|1|
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ```
 Where "chunk" is the front of the chunk for the purpose of most of the malloc code, but "mem" is the pointer that is returned to the user.  "Nextchunk" is the beginning of the next contiguous chunk.  
 Chunks always begin on even word boundaries, so the mem portion (which is returned to the user) is also on an even word boundary, and thus at least double-word aligned.  
 Free chunks are stored in circular doubly-linked lists, and look like this:  
 ```
-  chunk->  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-	         |             Size of previous chunk, if unallocated (P clear)  |
-	         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-  `head:'  |             Size of chunk, in bytes                     |A|0|P|
-    mem->  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-	         |             Forward pointer to next chunk in list             |
-	         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-	         |             Back pointer to previous chunk in list            |
-	         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-	         |             Unused space (may be 0 bytes long)                .
-	         .                                                               .
-	         .                                                               |
-nextchunk->+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-`foot:'    |             Size of chunk, in bytes                           |
-	         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-	         |             Size of next chunk, in bytes                |A|0|0|
-	         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ <--- chunk
+|             Size of previous chunk, if unallocated (P clear)  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|             Size of chunk, in bytes                     |A|0|P|  'head:'
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ <--- mem
+|             Forward pointer to next chunk in list             |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|             Back pointer to previous chunk in list            |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|             Unused space (may be 0 bytes long)                .
+.                                                               .
+.                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ <--- nextchunk
+|             Size of chunk, in bytes                           |  'foot:'
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|             Size of next chunk, in bytes                |A|0|0|
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ```
 In code above structures are presenting like this:  
 ```cpp
@@ -135,7 +135,7 @@ Bins
 ```
 
 There are 4 types of bins:
-- Fastbins - memory chunks up to 80 bytes, arranged in LIFO order, freed in `malloc_consolidate`.
+  Fastbins - memory chunks up to 80 bytes, arranged in LIFO order, freed in `malloc_consolidate`.
   ```
     malloc manages fastbins very conservatively yet still
     efficiently, so fragmentation is rarely a problem for values less
@@ -160,7 +160,7 @@ There are 4 types of bins:
     other free chunks.
   ```
 
-- Unsorted bin - when chunk of any size (small or large) gets freed it firstly is placed in unsorted bin, when malloc gives it another one chance to be used (FIFO order).
+  Unsorted bin - when chunk of any size (small or large) gets freed it firstly is placed in unsorted bin, when malloc gives it another one chance to be used (FIFO order).
     ```
     All remainders from chunk splits, as well as all returned chunks,
     are first placed in the "unsorted" bin. They are then placed
@@ -170,7 +170,7 @@ There are 4 types of bins:
     and taken off (to be either used or placed in bins) in malloc.
     ```
 
-- Small bins - following code presents a way to count maximum small chunk size - after doing some math you will get 512 bytes (for 32-bit system and 1024 for 64-bit) (FIFO order). Chunks inside bins are the same size.
+  Small bins - following code presents a way to count maximum small chunk size - after doing some math you will get 512 bytes (for 32-bit system and 1024 for 64-bit) (FIFO order). Chunks inside bins are the same size.
     ```c
     #define in_smallbin_range(sz)  \
         ((unsigned long) (sz) < (unsigned long) MIN_LARGE_SIZE)
@@ -195,7 +195,7 @@ There are 4 types of bins:
     - INTERNAL_SIZE_T might be signed or unsigned, might be 32 or 64 bits
     ```
 
-- Large bins - chunks of size more than 512 bytes (FIFO order).
+  Large bins - chunks of size more than 512 bytes (FIFO order).
 
 You have come this far? Nice! Now we will talk about implemetation of `malloc` and `free`.  
 So what happens when you call `malloc`?   
