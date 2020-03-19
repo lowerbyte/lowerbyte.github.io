@@ -63,23 +63,23 @@ Where "chunk" is the front of the chunk for the purpose of most of the malloc co
 Chunks always begin on even word boundaries, so the mem portion (which is returned to the user) is also on an even word boundary, and thus at least double-word aligned.  
 Free chunks are stored in circular doubly-linked lists, and look like this:  
 ```
-    chunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-	        |             Size of previous chunk, if unallocated (P clear)  |
-	        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    `head:' |             Size of chunk, in bytes                     |A|0|P|
-      mem-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-	        |             Forward pointer to next chunk in list             |
-	        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-	        |             Back pointer to previous chunk in list            |
-	        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-	        |             Unused space (may be 0 bytes long)                .
-	        .                                                               .
-	        .                                                               |
-nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-`foot:'     |             Size of chunk, in bytes                           |
-	        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-	        |             Size of next chunk, in bytes                |A|0|0|
-	        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  chunk->  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+	         |             Size of previous chunk, if unallocated (P clear)  |
+	         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  `head:'  |             Size of chunk, in bytes                     |A|0|P|
+    mem->  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+	         |             Forward pointer to next chunk in list             |
+	         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+	         |             Back pointer to previous chunk in list            |
+	         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+	         |             Unused space (may be 0 bytes long)                .
+	         .                                                               .
+	         .                                                               |
+nextchunk->+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+`foot:'    |             Size of chunk, in bytes                           |
+	         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+	         |             Size of next chunk, in bytes                |A|0|0|
+	         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ```
 In code above structures are presenting like this:  
 ```cpp
@@ -159,6 +159,7 @@ There are 4 types of bins:
     releases all chunks in fastbins and consolidates them with
     other free chunks.
   ```
+
 2. Unsorted bin - when chunk of any size (small or large) gets freed it firstly is placed in unsorted bin, when malloc gives it another one chance to be used (FIFO order).
     ```
     All remainders from chunk splits, as well as all returned chunks,
@@ -168,8 +169,9 @@ There are 4 types of bins:
     with chunks being placed on it in free (and malloc_consolidate),
     and taken off (to be either used or placed in bins) in malloc.
     ```
+
 3. Small bins - following code presents a way to count maximum small chunk size - after doing some math you will get 512 bytes (for 32-bit system and 1024 for 64-bit) (FIFO order). Chunks inside bins are the same size.
-    ```cpp  
+    ```c
     #define in_smallbin_range(sz)  \
         ((unsigned long) (sz) < (unsigned long) MIN_LARGE_SIZE)
     (...)
@@ -192,6 +194,7 @@ There are 4 types of bins:
     (...)
     - INTERNAL_SIZE_T might be signed or unsigned, might be 32 or 64 bits
     ```
+
 4. Large bins - chunks of size more than 512 bytes (FIFO order).
 
 You have come this far? Nice! Now we will talk about implemetation of `malloc` and `free`.  
