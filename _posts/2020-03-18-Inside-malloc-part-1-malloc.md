@@ -169,7 +169,7 @@ There are 4 types of bins:
     and taken off (to be either used or placed in bins) in malloc.
     ```
 3. Small bins - following code presents a way to count maximum small chunk size - after doing some math you will get 512 bytes (for 32-bit system and 1024 for 64-bit) (FIFO order). Chunks inside bins are the same size.
-    ```cpp
+    ```cpp  
     #define in_smallbin_range(sz)  \
         ((unsigned long) (sz) < (unsigned long) MIN_LARGE_SIZE)
     (...)
